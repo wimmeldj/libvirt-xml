@@ -1,0 +1,62 @@
+@font-face {
+	font-family: 'LibvirtOverpass';
+	src: url('https://libvirt.org/fonts/overpass-regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'LibvirtOverpass';
+	src: url('https://libvirt.org/fonts/overpass-italic.woff') format('woff');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'LibvirtOverpass';
+	src: url('https://libvirt.org/fonts/overpass-bold.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'LibvirtOverpass';
+	src: url('https://libvirt.org/fonts/overpass-bold-italic.woff') format('woff');
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'LibvirtOverpassLight';
+	src: url('https://libvirt.org/fonts/overpass-light.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'LibvirtOverpassLight';
+	src: url('https://libvirt.org/fonts/overpass-light-italic.woff') format('woff');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'LibvirtOverpassMono';
+	src: url('https://libvirt.org/fonts/overpass-mono-regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'LibvirtOverpassMono';
+	src: url('https://libvirt.org/fonts/overpass-mono-bold.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'LibvirtOverpassMonoLight';
+	src: url('https://libvirt.org/fonts/overpass-mono-light.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+}

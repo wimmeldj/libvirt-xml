@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /git/
+
+User-agent: AhrefsBot 
+Disallow: /
+
