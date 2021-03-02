@@ -25,6 +25,8 @@ performance. Specifically, pinning 28/32 threads with the remaining 4 available
 to the host having the lowest max frequency. It also specifically inclues the
 "topoext" feature because apparently hyperthreading isn't available without it.
 
+[curr.xml]( ./curr.xml) is xml that tracks my current working configuration.
+
 **TODO** hugepages? necessary?
 
 [grub]( ./etc/default/grub ) is an example of a grub config enabling IOMMU for AMD and

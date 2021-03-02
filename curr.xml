@@ -8,7 +8,42 @@
   </metadata>
   <memory unit="KiB">16777216</memory>
   <currentMemory unit="KiB">16777216</currentMemory>
-  <vcpu placement="static">32</vcpu>
+  <!-- <memoryBacking> -->
+  <!--   <hugepages> <page size="2048"/> </hugepages> -->
+  <!-- </memoryBacking> -->
+  <vcpu placement="static">28</vcpu> <!--14 cores 28 threads-->
+  <cputune>
+    <!-- cores closer to 0 have higher max frequencies. cores 14 and 15 (cpu
+         14,15,30,31) reserved for the host -->
+    <vcpupin vcpu="0" cpuset="0"/>
+    <vcpupin vcpu="1" cpuset="16"/>
+    <vcpupin vcpu="2" cpuset="1"/>
+    <vcpupin vcpu="3" cpuset="17"/>
+    <vcpupin vcpu="4" cpuset="2"/>
+    <vcpupin vcpu="5" cpuset="18"/>
+    <vcpupin vcpu="6" cpuset="3"/>
+    <vcpupin vcpu="7" cpuset="19"/>
+    <vcpupin vcpu="8" cpuset="4"/>
+    <vcpupin vcpu="9" cpuset="20"/>
+    <vcpupin vcpu="10" cpuset="5"/>
+    <vcpupin vcpu="11" cpuset="21"/>
+    <vcpupin vcpu="12" cpuset="6"/>
+    <vcpupin vcpu="13" cpuset="22"/>
+    <vcpupin vcpu="14" cpuset="7"/>
+    <vcpupin vcpu="15" cpuset="23"/>
+    <vcpupin vcpu="16" cpuset="8"/>
+    <vcpupin vcpu="17" cpuset="24"/>
+    <vcpupin vcpu="18" cpuset="9"/>
+    <vcpupin vcpu="19" cpuset="25"/>
+    <vcpupin vcpu="20" cpuset="10"/>
+    <vcpupin vcpu="21" cpuset="26"/>
+    <vcpupin vcpu="22" cpuset="11"/>
+    <vcpupin vcpu="23" cpuset="27"/>
+    <vcpupin vcpu="24" cpuset="12"/>
+    <vcpupin vcpu="25" cpuset="28"/>
+    <vcpupin vcpu="26" cpuset="13"/>
+    <vcpupin vcpu="27" cpuset="29"/>
+  </cputune>
   <os>
     <type arch="x86_64" machine="pc-q35-5.2">hvm</type>
     <loader readonly="yes" type="rom">/usr/share/edk2-ovmf/x64/OVMF_CODE.fd</loader>
@@ -37,7 +72,12 @@
     <vmport state="off"/>
     <ioapic driver='kvm'/>
   </features>
-  <cpu mode="host-model" check="partial"/>
+  <!-- apparently need topoext feature to enable hyperthreading. CTRL-F topoext
+       https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF -->
+  <cpu mode="host-model" check="partial">
+    <topology sockets="1" cores="14" threads="2"/>
+    <feature policy="require" name="topoext"/>
+  </cpu>
   <clock offset="localtime">
     <timer name="rtc" tickpolicy="catchup"/>
     <timer name="pit" tickpolicy="delay"/>
@@ -58,15 +98,23 @@
       <source file="/home/d/vm/iso/virtio-win-0.1.160.iso"/>
       <target dev="sdc" bus="sata"/>
       <readonly/>
-      <boot order="1"/>
       <address type="drive" controller="0" bus="0" target="0" unit="2"/>
     </disk>
+    <!-- main partition -->
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
       <source file="/ssd-raid0/vm-images/win10-work.qcow2"/>
       <target dev="sdd" bus="scsi"/>
-      <boot order="2"/>
+      <boot order="1"/>
       <address type="drive" controller="0" bus="0" target="0" unit="3"/>
+    </disk>
+    <!-- recovery partition -->
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="/ssd-raid0/vm-images/win10-work-recovery.qcow2"/>
+      <target dev="sde" bus="scsi"/>
+      <boot order="2"/>
+      <address type="drive" controller="0" bus="0" target="0" unit="4"/>
     </disk>
     <controller type="usb" index="0" model="qemu-xhci" ports="15">
       <address type="pci" domain="0x0000" bus="0x02" slot="0x00" function="0x0"/>
@@ -180,12 +228,6 @@
       </source>
       <address type="pci" domain="0x0000" bus="0x07" slot="0x00" function="0x0"/>
     </hostdev>
-    <redirdev bus="usb" type="spicevmc">
-      <address type="usb" bus="0" port="2"/>
-    </redirdev>
-    <redirdev bus="usb" type="spicevmc">
-      <address type="usb" bus="0" port="3"/>
-    </redirdev>
     <memballoon model="virtio">
       <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
     </memballoon>
