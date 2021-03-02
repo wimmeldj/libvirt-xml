@@ -103,7 +103,7 @@
     </disk>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
-      <source file="/home/d/vm/images/win10-work.qcow2"/>
+      <source file="/ssd-raid0/vm-images/win10-work.qcow2"/>
       <target dev="sdd" bus="scsi"/>
       <boot order="3"/>
       <address type="drive" controller="0" bus="0" target="0" unit="3"/>
