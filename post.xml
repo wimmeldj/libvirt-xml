@@ -147,17 +147,9 @@
     <hostdev mode="subsystem" type="usb" managed="yes">
       <source>
         <vendor id="0x046d"/>
-        <product id="0xc332"/>
+        <product id="0xc52b"/>
       </source>
       <address type="usb" bus="0" port="5"/>
-    </hostdev>
-    <!-- samsung flash drive -->
-    <hostdev mode="subsystem" type="usb" managed="yes">
-      <source>
-        <vendor id="0x090c"/>
-        <product id="0x1000"/>
-      </source>
-      <address type="usb" bus="0" port="1"/>
     </hostdev>
     <!-- usb redir -->
     <redirdev bus="usb" type="spicevmc">

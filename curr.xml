@@ -93,6 +93,12 @@
   </pm>
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <!-- requires swtpm -->
+    <tpm model='tpm-tis'>
+      <backend type='emulator' version='1.2'>
+        <!-- <encryption secret='6dd3e4a5-1d76-44ce-961f-f119f5aad935'/> -->
+      </backend>
+    </tpm>
     <disk type="file" device="cdrom">
       <driver name="qemu" type="raw"/>
       <source file="/home/d/vm/iso/virtio-win-0.1.160.iso"/>
@@ -186,6 +192,8 @@
     <!-- kbd -->
     <hostdev mode="subsystem" type="usb" managed="yes">
       <source>
+        <!-- <vendor id="0x04d9"/> -->
+        <!-- <product id="0x0339"/> -->
         <vendor id="0xfeed"/>
         <product id="0x0adb"/>
       </source>
@@ -195,11 +203,11 @@
     <hostdev mode="subsystem" type="usb" managed="yes">
       <source>
         <vendor id="0x046d"/>
-        <product id="0xc332"/>
+        <product id="0xc52b"/>
       </source>
       <address type="usb" bus="0" port="5"/>
     </hostdev>
-    <!-- samsung flash drive -->
+    <!-- samsung flash drive. has bitlocker key -->
     <hostdev mode="subsystem" type="usb" managed="yes">
       <source>
         <vendor id="0x090c"/>
