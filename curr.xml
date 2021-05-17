@@ -215,6 +215,14 @@
       </source>
       <address type="usb" bus="0" port="1"/>
     </hostdev>
+    <!-- usb headset -->
+    <hostdev mode="subsystem" type="usb" managed="yes">
+      <source>
+        <vendor id="0x045e"/>
+        <product id="0x070f"/>
+      </source>
+      <address type="usb" bus="0" port="6"/>
+    </hostdev>
     <!-- usb redir -->
     <redirdev bus="usb" type="spicevmc">
       <address type="usb" bus="0" port="2"/>
