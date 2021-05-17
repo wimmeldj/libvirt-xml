@@ -1,4 +1,4 @@
-<domain type="kvm">
+<domain type="kvm" xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0">
   <name>win10-work</name>
   <uuid>66c52dae-f442-48a6-909d-1d1ed8354e0f</uuid>
   <metadata>
@@ -189,24 +189,6 @@
     <sound model="ich9">
       <address type="pci" domain="0x0000" bus="0x00" slot="0x1b" function="0x0"/>
     </sound>
-    <!-- kbd -->
-    <hostdev mode="subsystem" type="usb" managed="yes">
-      <source>
-        <!-- <vendor id="0x04d9"/> -->
-        <!-- <product id="0x0339"/> -->
-        <vendor id="0xfeed"/>
-        <product id="0x0adb"/>
-      </source>
-      <address type="usb" bus="0" port="4"/>
-    </hostdev>
-    <!-- mouse -->
-    <hostdev mode="subsystem" type="usb" managed="yes">
-      <source>
-        <vendor id="0x046d"/>
-        <product id="0xc52b"/>
-      </source>
-      <address type="usb" bus="0" port="5"/>
-    </hostdev>
     <!-- samsung flash drive. has bitlocker key -->
     <hostdev mode="subsystem" type="usb" managed="yes">
       <source>
@@ -248,4 +230,14 @@
       <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
     </memballoon>
   </devices>
+  <!-- qemu commands -->
+  <qemu:commandline>
+    <!-- evdev devices. use r_ctrl + l_ctrl to switch between host and guest -->
+    <!-- evdev mouse -->
+    <qemu:arg value="-object"/>
+    <qemu:arg value="input-linux,id=mouse1,evdev=/dev/input/by-id/usb-Logitech_USB_Receiver-if02-event-mouse"/>
+    <!-- evdev keyboard -->
+    <qemu:arg value="-object"/>
+    <qemu:arg value="input-linux,id=keyboard1,evdev=/dev/input/by-id/usb-04d9_USB-HID_Keyboard-event-kbd,grab_all=on,repeat=on"/>
+  </qemu:commandline>
 </domain>

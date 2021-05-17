@@ -34,3 +34,9 @@ isolating the GPU by its PCI ID (one for video, one for audio).
 
 [mkinitcpio.conf]( ./etc/mkinitcpio.conf) is a standard mkinitcpio.conf file that
 requires the vfio kernel modules.
+
+[qemu.conf]( ./etc/libvirt/qemu.conf) configuration provided here may be
+necessary to get evdev to work properly. user and group currently set to root,
+but should work with any user in the `input` group. It may be necessary to add
+the input devices mentioned in the `input-linux` qemu commands to the "all-vms"
+cgroup `cgroup_device_acl`.
