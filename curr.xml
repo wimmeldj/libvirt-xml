@@ -6,8 +6,8 @@
       <libosinfo:os id="http://microsoft.com/win/10"/>
     </libosinfo:libosinfo>
   </metadata>
-  <memory unit="KiB">16777216</memory>
-  <currentMemory unit="KiB">16777216</currentMemory>
+  <memory unit="GiB">24</memory>
+  <currentMemory unit="GiB">24</currentMemory>
   <!-- <memoryBacking> -->
   <!--   <hugepages> <page size="2048"/> </hugepages> -->
   <!-- </memoryBacking> -->
@@ -113,7 +113,7 @@
     <disk type="file" device="cdrom">
       <driver name="qemu" type="raw"/>
       <source file="/home/d/vm/iso/virtio-win-0.1.160.iso"/>
-      <target dev="sdc" bus="sata"/>
+      <target dev="sde" bus="sata"/>
       <readonly/>
       <address type="drive" controller="0" bus="0" target="0" unit="2"/>
     </disk>
@@ -121,7 +121,7 @@
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
       <source file="/ssd-raid0/vm-images/win10-work.qcow2"/>
-      <target dev="sdd" bus="scsi"/>
+      <target dev="sdc" bus="scsi"/>
       <boot order="1"/>
       <address type="drive" controller="0" bus="0" target="0" unit="3"/>
     </disk>
@@ -129,9 +129,16 @@
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
       <source file="/ssd-raid0/vm-images/win10-work-recovery.qcow2"/>
-      <target dev="sde" bus="scsi"/>
+      <target dev="sdd" bus="scsi"/>
       <boot order="2"/>
-      <address type="drive" controller="0" bus="0" target="0" unit="4"/>
+      <address type="drive" controller="0" bus="0" unit="4"/>
+    </disk>
+    <!-- emulated usb drive for storing bitlocker key. GPT and mkntfs done on
+         windows guest. possible through qemu? -->
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="/hdd-mirror0/bitlocker-usb.qcow2"/>
+      <target dev="sdf" bus="usb"/>
     </disk>
     <controller type="usb" index="0" model="qemu-xhci" ports="15">
       <address type="pci" domain="0x0000" bus="0x02" slot="0x00" function="0x0"/>
@@ -200,14 +207,6 @@
     <sound model="ich9">
       <address type="pci" domain="0x0000" bus="0x00" slot="0x1b" function="0x0"/>
     </sound>
-    <!-- samsung flash drive. has bitlocker key -->
-    <hostdev mode="subsystem" type="usb" managed="yes">
-      <source>
-        <vendor id="0x090c"/>
-        <product id="0x1000"/>
-      </source>
-      <address type="usb" bus="0" port="1"/>
-    </hostdev>
     <!-- usb headset -->
     <hostdev mode="subsystem" type="usb" managed="yes">
       <source>
