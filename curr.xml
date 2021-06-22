@@ -86,7 +86,7 @@
     <feature policy="require" name="topoext"/> <!--enables hyperthreading -->
     <!-- these settings required for nested vms on windows guests -->
     <feature policy="disable" name="hypervisor"/>
-    <feature policy="require" name="vmx"/>
+    <!-- <feature policy="require" name="vmx"/> -->
     <feature policy="require" name="svm"/>
   </cpu>
   <clock offset="timezone" timezone="US/Pacific">
