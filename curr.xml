@@ -12,10 +12,41 @@
   <!--   <hugepages> <page size="2048"/> </hugepages> -->
   <!-- </memoryBacking> -->
   <!-- <vcpu placement="static">28</vcpu> <!-\-14 cores 28 threads-\-> -->
+  <os>
+    <type arch="x86_64" machine="pc-q35-5.2">hvm</type>
+    <loader readonly="yes" type="rom">/usr/share/edk2-ovmf/x64/OVMF_CODE.fd</loader>
+    <nvram>/var/lib/libvirt/qemu/nvram/win10-work_VARS.fd</nvram>
+    <bootmenu enable="yes"/>
+  </os>
+
+  <features>
+    <acpi/>
+    <apic/>
+    <hyperv>
+      <relaxed state="on"/>
+      <vapic state="on"/>
+      <spinlocks state="on" retries="8191"/>
+      <vendor_id state="on" value="7940846972"/> <!--random to avoid gpu driver detection-->
+      <vpindex state='on'/>
+      <runtime state='on'/>
+      <synic state='on'/>
+      <stimer state='on'/>
+      <reset state='on'/>
+      <frequencies state='on'/>
+      <reenlightenment state='on'/>
+      <tlbflush state='on'/>
+      <ipi state='on'/>
+    </hyperv>
+    <kvm>
+      <hidden state="on"/>      <!--prevent nvidia detection-->
+    </kvm>
+    <vmport state="off"/>
+    <ioapic driver='kvm'/>
+  </features>
+
   <vcpu placement="static">16</vcpu> <!--14 cores 28 threads-->
   <cputune>
-    <!-- cores closer to 0 have higher max frequencies. cores 14 and 15 (cpu
-         14,15,30,31) reserved for the host -->
+    <!-- cores closer to 0 have higher max frequencies. -->
     <vcpupin vcpu="0" cpuset="0"/>
     <vcpupin vcpu="1" cpuset="16"/>
     <vcpupin vcpu="2" cpuset="1"/>
@@ -50,51 +81,22 @@
     <!-- <vcpupin vcpu="30" cpuset="15"/> -->
     <!-- <vcpupin vcpu="31" cpuset="31"/> -->
   </cputune>
-  <os>
-    <type arch="x86_64" machine="pc-q35-5.2">hvm</type>
-    <loader readonly="yes" type="rom">/usr/share/edk2-ovmf/x64/OVMF_CODE.fd</loader>
-    <nvram>/var/lib/libvirt/qemu/nvram/win10-work_VARS.fd</nvram>
-    <bootmenu enable="yes"/>
-  </os>
-  <features>
-    <acpi/>
-    <apic/>
-    <hyperv>
-      <relaxed state="on"/>
-      <vapic state="on"/>
-      <spinlocks state="on" retries="8191"/>
-      <vendor_id state="on" value="7940846972"/> <!--random to avoid gpu driver detection-->
-      <vpindex state='on'/>
-      <runtime state='on'/>
-      <synic state='on'/>
-      <stimer state='on'/>
-      <reset state='on'/>
-      <frequencies state='on'/>
-      <reenlightenment state='on'/>
-      <tlbflush state='on'/>
-      <ipi state='on'/>
-    </hyperv>
-    <kvm>
-      <hidden state="on"/>      <!--prevent nvidia detection-->
-    </kvm>
-    <vmport state="off"/>
-    <ioapic driver='kvm'/>
-  </features>
   <cpu mode="host-model" check="none">
     <topology sockets="1" cores="8" threads="2"/>
     <!-- <cache mode="passthrough"/> <!-\- don't enable. breaks wsl2 even if mode=host-passthrough for whatever reason -\-> -->
     <feature policy="require" name="topoext"/> <!--enables hyperthreading -->
     <!-- these settings required for nested vms on windows guests -->
     <feature policy="disable" name="hypervisor"/>
-    <!-- <feature policy="require" name="vmx"/> -->
-    <feature policy="require" name="svm"/>
+    <feature policy="require" name="svm"/> <!--AMD-V-->
   </cpu>
+
   <clock offset="timezone" timezone="US/Pacific">
     <timer name="hypervclock" present="yes"/>
     <timer name="rtc" tickpolicy="catchup"/>
     <timer name="pit" tickpolicy="delay"/>
     <timer name="hpet" present="no"/>
   </clock>
+
   <on_poweroff>destroy</on_poweroff>
   <on_reboot>restart</on_reboot>
   <on_crash>destroy</on_crash>
@@ -102,6 +104,7 @@
     <suspend-to-mem enabled="no"/>
     <suspend-to-disk enabled="no"/>
   </pm>
+
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <!-- requires swtpm -->
@@ -110,6 +113,7 @@
         <!-- <encryption secret='6dd3e4a5-1d76-44ce-961f-f119f5aad935'/> -->
       </backend>
     </tpm>
+    <!-- virtio guest additions disk -->
     <disk type="file" device="cdrom">
       <driver name="qemu" type="raw"/>
       <source file="/home/d/vm/iso/virtio-win-0.1.160.iso"/>
@@ -140,6 +144,47 @@
       <source file="/hdd-mirror0/bitlocker-usb.qcow2"/>
       <target dev="sdf" bus="usb"/>
     </disk>
+
+    <!-- samsung flash drive. has bitlocker key -->
+    <!-- <hostdev mode="subsystem" type="usb" managed="yes"> -->
+    <!--   <source> -->
+    <!--     <vendor id="0x090c"/> -->
+    <!--     <product id="0x1000"/> -->
+    <!--   </source> -->
+    <!--   <address type="usb" bus="0" port="1"/> -->
+    <!-- </hostdev> -->
+
+    <!-- usb headset -->
+    <hostdev mode="subsystem" type="usb" managed="yes">
+      <source>
+        <vendor id="0x045e"/>
+        <product id="0x070f"/>
+      </source>
+      <address type="usb" bus="0" port="6"/>
+    </hostdev>
+    <!-- gpu video -->
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x2c" slot="0x00" function="0x0"/>
+      </source>
+      <address type="pci" domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
+    </hostdev>
+    <!-- gpu audio -->
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x2c" slot="0x00" function="0x1"/>
+      </source>
+      <address type="pci" domain="0x0000" bus="0x07" slot="0x00" function="0x0"/>
+    </hostdev>
+    <!-- usb redir -->
+    <redirdev bus="usb" type="spicevmc">
+      <address type="usb" bus="0" port="2"/>
+    </redirdev>
+    <redirdev bus="usb" type="spicevmc">
+      <address type="usb" bus="0" port="3"/>
+    </redirdev>
+
+    <!-- misc emulated controllers -->
     <controller type="usb" index="0" model="qemu-xhci" ports="15">
       <address type="pci" domain="0x0000" bus="0x02" slot="0x00" function="0x0"/>
     </controller>
@@ -180,6 +225,7 @@
     <controller type="virtio-serial" index="0">
       <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
     </controller>
+    <!-- emulated scsi. requires virtio guest additions installation -->
     <controller type="scsi" index="0" model="virtio-scsi">
       <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
     </controller>
@@ -188,12 +234,14 @@
       <target chassis="7" port="0x8"/>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0"/>
     </controller>
+
     <interface type="network">
       <mac address="52:54:00:ba:f3:a7"/>
       <source network="default"/>
       <model type="e1000e"/>
       <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
     </interface>
+
     <serial type="pty">
       <target type="isa-serial" port="0">
         <model name="isa-serial"/>
@@ -202,40 +250,30 @@
     <console type="pty">
       <target type="serial" port="0"/>
     </console>
+    <!-- required though not in use -->
     <input type="mouse" bus="ps2"/>
     <input type="keyboard" bus="ps2"/>
     <sound model="ich9">
       <address type="pci" domain="0x0000" bus="0x00" slot="0x1b" function="0x0"/>
     </sound>
-    <!-- usb headset -->
-    <hostdev mode="subsystem" type="usb" managed="yes">
-      <source>
-        <vendor id="0x045e"/>
-        <product id="0x070f"/>
-      </source>
-      <address type="usb" bus="0" port="6"/>
-    </hostdev>
-    <!-- usb redir -->
-    <redirdev bus="usb" type="spicevmc">
-      <address type="usb" bus="0" port="2"/>
-    </redirdev>
-    <redirdev bus="usb" type="spicevmc">
-      <address type="usb" bus="0" port="3"/>
-    </redirdev>
-    <!-- gpu video -->
-    <hostdev mode="subsystem" type="pci" managed="yes">
-      <source>
-        <address domain="0x0000" bus="0x2c" slot="0x00" function="0x0"/>
-      </source>
-      <address type="pci" domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
-    </hostdev>
-    <!-- gpu audio -->
-    <hostdev mode="subsystem" type="pci" managed="yes">
-      <source>
-        <address domain="0x0000" bus="0x2c" slot="0x00" function="0x1"/>
-      </source>
-      <address type="pci" domain="0x0000" bus="0x07" slot="0x00" function="0x0"/>
-    </hostdev>
+
+    <!-- <!-\- spice video backup -\-> -->
+    <!-- <channel type="spicevmc"> -->
+    <!--   <target type="virtio" name="com.redhat.spice.0"/> -->
+    <!--   <address type="virtio-serial" controller="0" bus="0" port="1"/> -->
+    <!-- </channel> -->
+    <!-- <input type="tablet" bus="usb"> -->
+    <!--   <address type="usb" bus="0" port="1"/> -->
+    <!-- </input> -->
+    <!-- <graphics type="spice" autoport="yes"> -->
+    <!--   <listen type="address"/> -->
+    <!--   <image compression="off"/> -->
+    <!-- </graphics> -->
+    <!-- <video> -->
+    <!--   <model type="qxl" ram="65536" vram="65536" vgamem="16384" heads="1" primary="yes"/> -->
+    <!--   <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0"/> -->
+    <!-- </video> -->
+
     <memballoon model="virtio">
       <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
     </memballoon>
