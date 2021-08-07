@@ -7,7 +7,7 @@
     </libosinfo:libosinfo>
   </metadata>
   <memory unit="GiB">24</memory>
-  <currentMemory unit="GiB">24</currentMemory>
+  <currentMemory unit="GiB">16</currentMemory>
   <!-- <memoryBacking> -->
   <!--   <hugepages> <page size="2048"/> </hugepages> -->
   <!-- </memoryBacking> -->
