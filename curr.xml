@@ -170,6 +170,12 @@
     <!--   </source> -->
     <!--   <address type="usb" bus="0" port="2"/> -->
     <!-- </hostdev> -->
+    <!-- pci usb controller -->
+    <hostdev mode="subsystem" type="pci" managed="yes">
+      <source>
+        <address domain="0x0000" bus="0x06" slot="0x00" function="0x00"/>
+      </source>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x00" function="0x0"/>
     </hostdev>
     <!-- gpu video -->
     <hostdev mode="subsystem" type="pci" managed="yes">
