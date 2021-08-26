@@ -160,7 +160,7 @@
         <vendor id="0x045e"/>
         <product id="0x070f"/>
       </source>
-      <address type="usb" bus="0" port="6"/>
+      <address type="usb" bus="0" port="1"/>
     </hostdev>
     <!-- logitech webcam -->
     <!-- <hostdev mode="subsystem" type="usb" managed="yes"> -->
