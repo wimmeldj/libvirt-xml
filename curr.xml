@@ -6,7 +6,7 @@
       <libosinfo:os id="http://microsoft.com/win/10"/>
     </libosinfo:libosinfo>
   </metadata>
-  <memory unit="GiB">24</memory>
+  <memory unit="GiB">64</memory>
   <currentMemory unit="GiB">16</currentMemory>
   <!-- <memoryBacking> -->
   <!--   <hugepages> <page size="2048"/> </hugepages> -->
