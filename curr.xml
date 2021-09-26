@@ -122,12 +122,22 @@
       <readonly/>
       <address type="drive" controller="0" bus="0" target="0" unit="2"/>
     </disk>
+
+    <!-- emulated usb drive for storing bitlocker key. GPT and mkntfs done on
+         windows guest. possible through qemu? -->
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="/ssd-raid0/vm-images/bitlocker-usb.qcow2"/>
+      <target dev="sdf" bus="usb"/>
+      <boot order="1"/>
+    </disk>
+
     <!-- main partition -->
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
       <source file="/ssd-raid0/vm-images/win10-work.qcow2"/>
       <target dev="sdc" bus="scsi"/>
-      <boot order="1"/>
+      <boot order="2"/>
       <address type="drive" controller="0" bus="0" target="0" unit="1"/>
     </disk>
     <!-- recovery partition -->
@@ -135,15 +145,8 @@
       <driver name="qemu" type="qcow2"/>
       <source file="/ssd-raid0/vm-images/win10-work-recovery.qcow2"/>
       <target dev="sdd" bus="scsi"/>
-      <boot order="2"/>
+      <boot order="3"/>
       <address type="drive" controller="0" bus="0" unit="3"/>
-    </disk>
-    <!-- emulated usb drive for storing bitlocker key. GPT and mkntfs done on
-         windows guest. possible through qemu? -->
-    <disk type="file" device="disk">
-      <driver name="qemu" type="qcow2"/>
-      <source file="/ssd-raid0/vm-images/bitlocker-usb.qcow2"/>
-      <target dev="sdf" bus="usb"/>
     </disk>
 
     <!-- storage. mainly for sharing storage between guest and hyper-v guest^2
