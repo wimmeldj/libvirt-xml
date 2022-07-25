@@ -88,6 +88,7 @@
     <!-- these settings required for nested vms on windows guests -->
     <feature policy="disable" name="hypervisor"/>
     <feature policy="require" name="svm"/> <!--AMD-V-->
+    <!-- <feature policy="require" name="vmx"/> -->
   </cpu>
 
   <clock offset="timezone" timezone="US/Pacific">
@@ -174,13 +175,22 @@
     <!-- </hostdev> -->
 
     <!-- usb headset -->
-    <hostdev mode="subsystem" type="usb" managed="yes">
-      <source>
-        <vendor id="0x045e"/>
-        <product id="0x070f"/>
-      </source>
-      <address type="usb" bus="0" port="1"/>
-    </hostdev>
+    <!-- <hostdev mode="subsystem" type="usb" managed="yes"> -->
+    <!--   <source> -->
+    <!--     <vendor id="0x045e"/> -->
+    <!--     <product id="0x070f"/> -->
+    <!--   </source> -->
+    <!--   <address type="usb" bus="0" port="1"/> -->
+    <!-- </hostdev> -->
+
+    <!-- <!-\- intel AX200 bluetooth -\-> -->
+    <!-- <hostdev mode="subsystem" type="usb" managed="yes"> -->
+    <!--   <source> -->
+    <!--     <vendor id="0x8087"/> -->
+    <!--     <product id="0x0029"/> -->
+    <!--   </source> -->
+    <!--   <address type="usb" bus="0" port="2"/> -->
+    <!-- </hostdev>     -->
 
     <hostdev mode="subsystem" type="pci" managed="yes">
       <source>
@@ -311,7 +321,9 @@
     <qemu:arg value="-object"/>
     <qemu:arg value="input-linux,id=mouse1,evdev=/dev/input/by-id/usb-Logitech_USB_Receiver-if02-event-mouse"/>
     <!-- evdev keyboard -->
+    <!-- <qemu:arg value="-object"/> -->
+    <!-- <qemu:arg value="input-linux,id=keyboard1,evdev=/dev/input/by-id/usb-04d9_USB-HID_Keyboard-event-kbd,grab_all=on,repeat=on"/> -->
     <qemu:arg value="-object"/>
-    <qemu:arg value="input-linux,id=keyboard1,evdev=/dev/input/by-id/usb-04d9_USB-HID_Keyboard-event-kbd,grab_all=on,repeat=on"/>
+    <qemu:arg value="input-linux,id=keyboard1,evdev=/dev/input/by-id/usb-TMK_USB_to_USB_keyboard_converter-event-kbd,grab_all=on,repeat=on"/>
   </qemu:commandline>
 </domain>
