@@ -107,10 +107,16 @@
 
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <!-- REM. software tpm emulation currently not working -->
     <!-- requires swtpm -->
-    <tpm model='tpm-tis'>
-      <backend type='emulator' version='2.0'>
-        <!-- <encryption secret='6dd3e4a5-1d76-44ce-961f-f119f5aad935'/> -->
+    <!-- <tpm model='tpm-tis'> -->
+    <!--   <backend type='emulator' version='2.0'> -->
+    <!--     <!-\- <encryption secret='6dd3e4a5-1d76-44ce-961f-f119f5aad935'/> -\-> -->
+    <!--   </backend> -->
+    <!-- </tpm> -->
+    <tpm model="tpm-tis">
+      <backend type="passthrough">
+	<device path="/dev/tpm0"/>
       </backend>
     </tpm>
 
